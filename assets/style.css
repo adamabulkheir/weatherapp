@@ -1,0 +1,14 @@
+.header {
+    text-align: center;
+    background-image: linear-gradient(forestgreen, black);
+    height:50px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 28px;
+}
+
+aside {
+    width: 50%;
+    margin-top: 50px;
+    margin-left: 50px;
+}
