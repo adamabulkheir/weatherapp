@@ -1,42 +1,50 @@
 const searchInput = document.getElementById('search-input');
 
-// Add an event listener to the search input for the "Enter" key press
 searchInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        console.log('enter'); // Prevent form submission
+        console.log('enter');
 
         const cityName = searchInput.value.trim();
 
-        // Make a request to the OpenWeatherAPI to retrieve the forecast data
         axios
             .get('https://api.openweathermap.org/data/2.5/forecast', {
                 params: {
                     q: cityName,
                     appid: '17ac85745bd3acad3a06db3b59ee84a0',
-                    units: 'metric' // Change to 'imperial' if you prefer Fahrenheit
+                    units: 'imperial'
                 }
             })
             .then(function (response) {
                 const forecastData = response.data;
-                // Display the forecast data on the page
+
                 displayForecast(forecastData);
             })
             .catch(function (error) {
                 console.log(error);
-                // Handle error cases
+
             });
     }
 });
-
 function displayForecast(apiResponse) {
     const forecastCardsContainer = document.querySelector('.forecast-cards');
 
-    // Clear any existing forecast cards
     forecastCardsContainer.innerHTML = '';
 
-    // Loop through the forecast objects in the API response
+
+    const forecastsByDay = {};
+
+
     apiResponse.list.forEach(forecast => {
+
+        const date = forecast.dt_txt.split(' ')[0];
+
+        if (!forecastsByDay[date]) {
+
+            forecastsByDay[date] = forecast;
+        }
+    });
+    Object.values(forecastsByDay).forEach(forecast => {
         const card = document.createElement('div');
         card.classList.add('card');
 
@@ -46,7 +54,6 @@ function displayForecast(apiResponse) {
         const cardTitle = document.createElement('h2');
         cardTitle.classList.add('card-title');
 
-        // Extract the date from the forecast object's dt_txt property
         const date = new Date(forecast.dt_txt);
         cardTitle.textContent = date.toDateString();
 
